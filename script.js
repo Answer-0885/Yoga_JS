@@ -34,5 +34,56 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
   });
+
+
+  // Таймер
+  let deadLine = '2021-11-06'; // дата до которой будет идти отсчёт
+
+  function getTimeRemaining(endtime) {
+    let t = Date.parse(endtime) - Date.parse(new Date()); // t - это переменная, которая является разницей между конечной датой и текущего времени.
+    let seconds = Math.floor((t / 1000) % 60), //округляем до целых чисел.
+      minutes = Math.floor((t / 1000 / 60) % 60),
+      hours = Math.floor((t / (1000 * 60 * 60)));
+
+    return {
+      'total': t,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+  }
+
+  function setClock(id, endtime) {
+    let timer = document.getElementById(id),
+      hours = timer.querySelector('.hours'),
+      minutes = timer.querySelector('.minutes'),
+      seconds = timer.querySelector('.seconds'),
+      timeInterval = setInterval(updateClock, 1000);
+
+    function updateClock() {
+      let t = getTimeRemaining(endtime);
+
+      function addZero(num) {
+        if (num <= 9) {
+          return '0' + num;
+        } else return num;
+      };
+
+      hours.textContent = addZero(t.hours);
+      minutes.textContent = addZero(t.minutes);
+      seconds.textContent = addZero(t.seconds);
+
+      if (t.total <= 0) {
+        clearInterval(timeInterval);
+        hours.textContent = '00';
+        minutes.textContent = '00';
+        seconds.textContent = '00';
+      }
+    }
+
+  }
+
+  setClock('timer', deadLine);
+
 });
 // это событие срабатывает тогда, когда полностью загрузилась DOM структура нашего документа. Но некоторые картинки могли ещё не догрузиться.
